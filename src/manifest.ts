@@ -28,6 +28,22 @@ export interface GeneratedImageRecord {
 const MAX_RECORDS = 50;
 const records: GeneratedImageRecord[] = [];
 
+type Listener = () => void;
+const changeListeners: Listener[] = [];
+
+/**
+ * Notified whenever the manifest changes, so `index.ts` can wire this up to
+ * `McpServer.sendResourceListChanged()`. The server declares
+ * `resources: { listChanged: true }` on initialize (the SDK's default once
+ * any resources are registered) — that's a promise to clients that the
+ * resource list can change and they'll be told, so it has to actually fire
+ * when `generated-image://*` gains a new entry, not just when the process
+ * restarts.
+ */
+export function onGeneratedImageAdded(listener: Listener): void {
+  changeListeners.push(listener);
+}
+
 export function recordGeneratedImage(input: Omit<GeneratedImageRecord, "id" | "createdAt">): GeneratedImageRecord {
   const record: GeneratedImageRecord = {
     ...input,
@@ -36,6 +52,7 @@ export function recordGeneratedImage(input: Omit<GeneratedImageRecord, "id" | "c
   };
   records.unshift(record);
   while (records.length > MAX_RECORDS) records.pop();
+  for (const listener of changeListeners) listener();
   return record;
 }
 

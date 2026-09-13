@@ -12,6 +12,7 @@ import { registerListTemplatesTool } from "./tools/listTemplates.js";
 import { registerRenderTemplateTool } from "./tools/renderTemplate.js";
 import { registerResources } from "./resources.js";
 import { registerPrompts } from "./prompts.js";
+import { onGeneratedImageAdded } from "./manifest.js";
 
 const SERVER_NAME = "nanobanana-mcp";
 const SERVER_VERSION = "0.1.0";
@@ -51,6 +52,14 @@ async function main(): Promise<void> {
   registerRenderTemplateTool(server);
   registerResources(server);
   registerPrompts(server);
+
+  // Keep the `resources: { listChanged: true }` capability we declare on
+  // initialize honest: tell already-connected clients to re-fetch
+  // resources/list whenever a new generated-image record appears, instead
+  // of only reflecting it the next time they happen to ask.
+  onGeneratedImageAdded(() => {
+    server.sendResourceListChanged();
+  });
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
