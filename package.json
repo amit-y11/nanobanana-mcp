@@ -46,7 +46,7 @@
     "start": "node build/index.js",
     "dev": "tsc --watch",
     "inspect": "npm run build && npx @modelcontextprotocol/inspector node build/index.js",
-    "prepublishOnly": "npm run build"
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@google/genai": "^2.22.0",
