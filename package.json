@@ -1,0 +1,60 @@
+{
+  "name": "nanobanana-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Gemini image generation (\"Nano Banana\" / \"Nano Banana Pro\"). Supports a Gemini API key from AI Studio, a Vertex AI / Gemini Enterprise Agent Platform API key (Express Mode), and Application Default Credentials (ADC).",
+  "type": "module",
+  "license": "MIT",
+  "author": "Amit (amit-y11)",
+  "homepage": "https://github.com/amit-y11/nanobanana-mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amit-y11/nanobanana-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amit-y11/nanobanana-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "gemini",
+    "nano-banana",
+    "nano-banana-pro",
+    "image-generation",
+    "vertex-ai",
+    "gemini-enterprise-agent-platform",
+    "claude",
+    "claude-desktop",
+    "claude-code",
+    "cursor",
+    "vscode",
+    "codex"
+  ],
+  "bin": {
+    "nanobanana-mcp": "./build/index.js"
+  },
+  "main": "./build/index.js",
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js",
+    "start": "node build/index.js",
+    "dev": "tsc --watch",
+    "inspect": "npm run build && npx @modelcontextprotocol/inspector node build/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@google/genai": "^2.22.0",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^7.0.2"
+  }
+}
