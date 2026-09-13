@@ -1,5 +1,5 @@
 {
-  "name": "nanobanana-mcp",
+  "name": "@amit-y11/nanobanana-mcp",
   "version": "0.1.0",
   "description": "MCP server for Gemini image generation (\"Nano Banana\" / \"Nano Banana Pro\"). Supports a Gemini API key from AI Studio, a Vertex AI / Gemini Enterprise Agent Platform API key (Express Mode), and Application Default Credentials (ADC).",
   "type": "module",

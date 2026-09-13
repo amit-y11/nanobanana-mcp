@@ -26,12 +26,12 @@ An [MCP](https://modelcontextprotocol.io) server for Google's Gemini image model
 
 ## Installation
 
-**From npm (recommended)** — no local install step needed. Every client config below uses `npx -y nanobanana-mcp`, which downloads and runs the latest published version on demand.
+**From npm (recommended)** — no local install step needed. Every client config below uses `npx -y @amit-y11/nanobanana-mcp`, which downloads and runs the latest published version on demand.
 
 **From source** — for local development or before the package is published:
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/nanobanana-mcp.git
+git clone https://github.com/amit-y11/nanobanana-mcp.git
 cd nanobanana-mcp
 npm install
 npm run build
@@ -112,7 +112,7 @@ Saved images are also indexed in the `generated-image://` resources above.
 
 ## Connecting to MCP clients
 
-All examples below use `npx -y nanobanana-mcp` (the published package) and the Gemini API key mode for brevity. To use a different auth mode, swap the `env` block for the one shown in [Authentication](#authentication) — everything else about each config stays the same. Running from a local clone instead? See the note at the end of [Installation](#installation).
+All examples below use `npx -y @amit-y11/nanobanana-mcp` (the published package) and the Gemini API key mode for brevity. To use a different auth mode, swap the `env` block for the one shown in [Authentication](#authentication) — everything else about each config stays the same. Running from a local clone instead? See the note at the end of [Installation](#installation).
 
 ### Claude Desktop
 
@@ -127,7 +127,7 @@ Edit your config file (create it if it doesn't exist):
   "mcpServers": {
     "nanobanana": {
       "command": "npx",
-      "args": ["-y", "nanobanana-mcp"],
+      "args": ["-y", "@amit-y11/nanobanana-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key"
       }
@@ -144,7 +144,7 @@ Either run:
 
 ```bash
 claude mcp add --transport stdio --env GEMINI_API_KEY=your-gemini-api-key \
-  nanobanana -- npx -y nanobanana-mcp
+  nanobanana -- npx -y @amit-y11/nanobanana-mcp
 ```
 
 or add it directly to `.mcp.json` (project scope) or `~/.claude.json` (user scope, under `mcpServers`) using the same shape as the Claude Desktop config above. Verify with `claude mcp list` / the `/mcp` command.
@@ -159,7 +159,7 @@ Create `.vscode/mcp.json` in your workspace (or use **MCP: Open User Configurati
     "nanobanana": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "nanobanana-mcp"],
+      "args": ["-y", "@amit-y11/nanobanana-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key"
       }
@@ -177,7 +177,7 @@ Create `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
   "mcpServers": {
     "nanobanana": {
       "command": "npx",
-      "args": ["-y", "nanobanana-mcp"],
+      "args": ["-y", "@amit-y11/nanobanana-mcp"],
       "env": {
         "GEMINI_API_KEY": "your-gemini-api-key"
       }
@@ -195,7 +195,7 @@ Codex uses TOML, shared between the CLI and the IDE extension, at `~/.codex/conf
 ```toml
 [mcp_servers.nanobanana]
 command = "npx"
-args = ["-y", "nanobanana-mcp"]
+args = ["-y", "@amit-y11/nanobanana-mcp"]
 
 [mcp_servers.nanobanana.env]
 GEMINI_API_KEY = "your-gemini-api-key"
@@ -205,7 +205,7 @@ Or via the CLI:
 
 ```bash
 codex mcp add nanobanana --env GEMINI_API_KEY=your-gemini-api-key \
-  -- npx -y nanobanana-mcp
+  -- npx -y @amit-y11/nanobanana-mcp
 ```
 
 Run `/mcp` inside a Codex session afterwards to confirm it's connected.
@@ -225,16 +225,6 @@ npm run inspect   # build, then open the MCP Inspector against the built server
 ### Logging
 
 Everything is logged to **stderr only** — on the stdio transport, stdout is the JSON-RPC wire, and anything else written there corrupts every message after it. Set `NANOBANANA_LOG_LEVEL=debug` for more detail (cache hits, etc.).
-
-## Publishing (maintainers)
-
-1. Update `author`, `homepage`, `repository`, and `bugs` in `package.json` (replace the `YOUR_GITHUB_USERNAME` / `YOUR_NAME_HERE` placeholders), and bump `version`.
-2. `npm login` (one-time).
-3. `npm pack --dry-run` — confirm only `build/`, `README.md`, `LICENSE`, and `package.json` are included.
-4. `npm publish` (the `prepublishOnly` script rebuilds automatically; add `--access public` only if you rename the package to a scoped name like `@you/nanobanana-mcp`).
-5. Verify: `npm view nanobanana-mcp` and `npx -y nanobanana-mcp` (it should print a startup log line to stderr, or a config-error message if no credentials are set — both mean it installed correctly).
-
-Optionally, also list it in the [official MCP Registry](https://modelcontextprotocol.io/registry/quickstart) so MCP-aware clients can discover it directly: add an `mcpName` field to `package.json` (e.g. `"io.github.you/nanobanana-mcp"`), install the `mcp-publisher` CLI, run `mcp-publisher init`, `mcp-publisher login github`, then `mcp-publisher publish`.
 
 ## Troubleshooting
 
