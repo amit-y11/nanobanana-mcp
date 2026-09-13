@@ -33,6 +33,10 @@
     "nanobanana-mcp": "./build/index.js"
   },
   "main": "./build/index.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "files": [
     "build",
     "README.md",
@@ -46,6 +50,9 @@
     "start": "node build/index.js",
     "dev": "tsc --watch",
     "inspect": "npm run build && npx @modelcontextprotocol/inspector node build/index.js",
+    "commitlint": "commitlint",
+    "prepare": "husky",
+    "release": "semantic-release",
     "prepack": "npm run build"
   },
   "dependencies": {
@@ -54,7 +61,13 @@
     "zod": "^4.2.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
+    "@semantic-release/git": "^11.0.1",
     "@types/node": "^22.10.0",
+    "conventional-changelog-conventionalcommits": "^10.4.0",
+    "husky": "^9.1.7",
+    "semantic-release": "^25.0.9",
     "typescript": "^7.0.2"
   }
 }

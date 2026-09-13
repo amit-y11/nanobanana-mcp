@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: '0'
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Check out full release history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Verify existing release baseline
+        run: |
+          if ! git rev-parse --verify refs/tags/v0.1.0 >/dev/null 2>&1; then
+            echo '::error::Tag the commit published as 0.1.0 with v0.1.0 and push the tag before releasing.'
+            exit 1
+          fi
+          git merge-base --is-ancestor v0.1.0 HEAD
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate unreleased commit messages
+        run: |
+          last_release=$(git describe --tags --abbrev=0 --match 'v[0-9]*')
+          npm run commitlint -- --from "$last_release" --to HEAD --verbose
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish npm package and GitHub release
+        run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
